@@ -1,0 +1,21 @@
+# Use an official Python runtime as a parent image
+FROM python:3.10-slim-buster
+
+# Set the working directory to /app
+WORKDIR /app
+
+# 1. COPY dependencies file FIRST (rarely changes)
+COPY requirements.txt /app/
+
+# 2. INSTALL dependencies (This layer is heavily cached)
+# The cache for this RUN step only breaks if requirements.txt changes.
+RUN pip install --no-cache-dir -r requirements.txt
+
+# 3. COPY application files (Changes often, but this is the LAST time-consuming step)
+COPY Simple_perceptron.py /app/
+
+# Dont need port 80 for this container
+# EXPOSE 80
+
+# Run Simple_perceptron.py when the container launches
+CMD ["python", "Simple_perceptron.py"]
