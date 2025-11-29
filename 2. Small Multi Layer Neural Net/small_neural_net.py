@@ -180,10 +180,11 @@ for i, (test_input, test_norm, expected) in enumerate(zip(test_cases, test_cases
     print(f"\n🔢 Neural Network Processing:")
     print(f"{'─' * 80}")
     
-    # Get intermediate outputs for visualization
-    # Layer 1 output
-    layer1_model = keras.Model(inputs=model.input, outputs=model.layers[0].output)
-    layer1_output = layer1_model.predict(test_norm.reshape(1, -1), verbose=0)[0]
+    # Use the functional approach that works in Keras 3.x
+    input_data = test_norm.reshape(1, -1)
+    
+    # Get layer outputs by calling layers directly
+    layer1_output = model.layers[0](input_data).numpy()[0]
     
     print(f"\n  Step 1 - Hidden Layer 1 (8 neurons with ReLU):")
     print(f"    Input (normalized): [{test_norm[0]:.3f}, {test_norm[1]:.3f}, {test_norm[2]:.3f}]")
@@ -191,8 +192,8 @@ for i, (test_input, test_norm, expected) in enumerate(zip(test_cases, test_cases
     print(f"    Active neurons: {np.sum(layer1_output > 0)}/8")
     
     # Layer 2 output
-    layer2_model = keras.Model(inputs=model.input, outputs=model.layers[1].output)
-    layer2_output = layer2_model.predict(test_norm.reshape(1, -1), verbose=0)[0]
+    x = model.layers[0](input_data)
+    layer2_output = model.layers[1](x).numpy()[0]
     
     print(f"\n  Step 2 - Hidden Layer 2 (6 neurons with ReLU):")
     print(f"    Output activations: {layer2_output[:4].round(3)} ... (showing first 4)")
