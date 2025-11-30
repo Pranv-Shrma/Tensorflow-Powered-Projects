@@ -1,0 +1,6 @@
+**/venv
+*.ipynb
+experiment.ipynb
+hamlet.txt
+.DS_Store
+*.log
